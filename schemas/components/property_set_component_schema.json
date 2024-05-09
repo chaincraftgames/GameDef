@@ -1,0 +1,21 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "property_set",
+  "description": "A set of properties that can be applied to an entity.",
+  "allOf": [
+    { "$ref": "/schemas/components/base_component_schema.json" },
+    {
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["property_set"]
+        },
+        "properties": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      },
+      "required": ["type", "properties"]
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "move_between_inventories",
+  "allOf": [
+    { "$ref": "/schemas/actions/base_action_schema.json" },
+    {
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["play_from_hand"]
+        },
+        "properties": {
+          "type": "object",
+          "properties": {
+            "to_property": {
+              "type": "string",
+              "description": "The pool that the action allows the player to add the card to.  If not specified then the card is played to the table."
+            }
+          },
+          "required": []
+        }
+      },
+      "required": ["type", "properties"]
+    }
+  ]
+}

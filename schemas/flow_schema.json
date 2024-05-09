@@ -1,0 +1,104 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "flow",
+  "description": "Defines the flow of the game, what the stages are, how rounds are played and end, and how the game ends.",
+  "definitions": {
+    "endCondition": {
+      "description": "End condition for the round",
+      "oneOf": [
+        {
+          "type": "string",
+          "enum": [
+            "each_player_once"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": ["rounds_played", "score_limit"]
+            },
+            "value": {
+              "type": ["string", "integer"],
+              "description": "Value for the end condition"
+            }
+          },
+          "required": ["type", "value"],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": ["custom"]
+            },
+            "function_expression": {
+              "type": "string",
+              "description": "Custom function expression for the end condition"
+            }
+          },
+          "required": ["type", "function_expression"],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "roundOrRepeat": {
+      "oneOf": [
+        {
+          "description": "The inclusion of a round in the game flow",
+          "type": "object",
+          "properties": {
+            "round": {
+              "type": "string"
+            },
+            "end_condition": {
+              "$ref": "#/definitions/endCondition"
+            }
+          },
+          "required": ["round", "end_condition"]
+        },
+        {
+          "description": "A repeating sequence of rounds in the game flow",
+          "type": "object",
+          "properties": {
+            "repeat": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/roundOrRepeat"
+              }
+            }
+          },
+          "required": ["repeat"]
+        }
+      ]
+    }
+  },
+  "type": "array",
+  "allOf": [
+    {
+      "items": [
+        {
+          "type": "string",
+          "enum": ["start"]
+        }
+      ]
+    },
+    {
+      "items": {
+        "$ref": "#/definitions/roundOrRepeat"
+      },
+      "minItems": 1
+    },
+    {
+      "items": [
+        {
+          "type": "string",
+          "enum": ["end"]
+        }
+      ]
+    }
+  ],
+  "minItems": 3
+}

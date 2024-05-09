@@ -1,0 +1,28 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "definitions": {
+        "player_role_ref": {
+            "type": "string",
+            "description": "This string should match the id of a player role"
+        },
+        "component_ref": {
+            "type": "string",
+            "description": "This string should match the id of a component"
+        },
+        "property_ref": {
+            "type": "object",
+            "properties": {
+                "$c": {
+                    "type": "string",
+                    "description": "This string should match the id of a component"
+                },
+                "$p": {
+                    "type": "string",
+                    "description": "This string should match the name of a property in the referenced component"
+                }
+            },
+            "required": ["$c", "$p"],
+            "description": "This object should reference a property in a component"
+        }
+    }
+}

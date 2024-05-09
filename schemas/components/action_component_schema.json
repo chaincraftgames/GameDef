@@ -1,0 +1,24 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "action",
+  "description": "An component that links an action to an entity, e.g. a round.",
+  "allOf": [
+    { "$ref": "/schemas/components/base_component_schema.json" },
+    {
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["action"]
+        },
+        "properties": {
+          "type": "object",
+          "properties": {
+            "action": { "type": "string" }
+          },
+          "required": ["action"]
+        }
+      },
+      "required": ["type", "properties"]
+    }
+  ]
+}

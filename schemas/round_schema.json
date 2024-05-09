@@ -1,0 +1,14 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "round",
+    "description": "A round of the game involving players matching the player role where players can perfrom actions.  Can also represent several rounds that are taken until some end condition is met and otionally a score is determined",
+    "type": "object",
+    "properties": {
+        "id": { "type": "string" },
+        "$player_role": { "$ref": "/schemas/common_schema.json#/definitions/player_role_ref" },
+        "components": {
+            "type": "array",
+            "items": { "$ref": "/schemas/component/base_component_schema.json" }
+        }
+    }
+}

@@ -1,0 +1,198 @@
+includes:
+  - examples/spades/deck.yaml
+
+functions:
+  calculate_score: &calculate_score
+    parameters:
+      bid: number
+      tricks_taken: object
+    return: number
+    code: |
+      if tricks_taken < bid then
+        return -10 * bid
+      else
+        return 10 * bid + (tricks_taken - bid)
+      end
+
+roles:
+  - &player
+    id: player
+    min: 2
+    max: 4
+    components:
+      - type: inventory
+        &hand
+        id: hand
+        properties:
+          max_size: 13
+          min_size: 0
+
+      - type: inventory
+        &player_tricks_taken
+        id: player_tricks_taken
+        properties:
+          max_size: 13
+          min_size: 0
+
+      - type: property_set
+        &player_properties
+        id: player_properties
+        properties:
+          bid: 0
+          score: 0
+
+  - &team
+    id: team
+    min: 2
+    max: 2
+    components:
+      - type: property_set
+        id: team_properties
+        properties:
+          bid: 0
+          score: 0
+
+      - type: inventory
+        &team_tricks_taken
+        id: team_tricks_taken
+        properties:
+          max_size: 13
+          min_size: 0
+
+rounds:
+  - &deal_round
+    id: deal_round
+    $player_role: player
+    components:
+      - type: action
+        properties:
+          action: deal
+          properties:
+            to_property: hand
+            from_property: deck
+
+  - &bidding_round
+    id: bidding_round
+    $player_role: *player
+    components:
+      - type: action
+        properties:
+          action: *bid_on_tricks
+
+  - &outer_round
+    id: outer_round
+    $player_role: *player
+    components:
+      - type: scoring
+        properties:
+          $input_properties:
+            $tricks_taken: {$c: player_tricks_taken, $p: items}
+            $bid: {$c: player_properties, $p: bid}
+          $output_property: {$c: player_properties, $p: score}
+          $calculator: *calculate_score
+      
+  - &inner_round
+    id: inner_round
+    $player_role: player
+    components:
+      - type: action
+        properties:
+          action: *play_card
+
+actions:
+  - &bid_on_tricks
+    id: bid_on_tricks
+    action: player_prompt
+    properties:
+      prompt: "How many tricks will you take?"
+      $property: {$c: player_properties, $p: bid}
+
+  - &play_card
+    id: play_card
+    action: move_between_inventories
+    properties:
+      $from_inventory: *hand
+      $to_inventory: *played_cards
+
+flow:
+  - start
+  - repeat:
+    - round: *deal_round
+      end_condition: 
+        rounds_played: 13
+    - round: *bidding_round
+      end_condition: each_player_once
+    - round: *outer_round
+      repeat:
+        - round: *inner_round
+          end_condition: each_player_once
+      end_condition: 
+        rounds_played: 13
+  - end_condition:
+      or:
+        $score_limit: {$c: config, $p: score_limit}
+        $rounds_played: {$c: config, $p: fixed_rounds}
+  - end
+    
+game:
+  components:
+    - type: property_set
+      id: config
+      properties:
+        player_count: 4
+        score_limit: 100
+        fixed_rounds: 10
+
+    - type: property_set
+      id: game_state
+      properties:
+        trump_card: null
+
+    - type: deck
+      properties:
+        id: deck
+        deck: *standard_deck
+
+    - type: inventory
+        &played_cards
+        id: played_cards
+        properties:
+          max_size: 4
+          min_size: 0
+
+    - type: team
+      properties:
+          $player_role: *player
+          $team_role: *team
+          player_count:
+            min: 1
+            max: 2
+          aggregator:
+            - $input: {$c: player_properties, $p: bid}
+              $output: {$c: team_properties, $p: bid}
+            - $input: {$c: player_tricks_taken, $p: items}
+              $output: {$c: team_tricks_taken, $p: items}
+
+    - type: mechanic
+      mechanic: trump
+      properties:
+        $inventory: *played_cards
+        trump_properties:
+          - $property: {$c: card, $p: suit}
+            value: spade
+          - $property: {$c: card, $p: rank}
+            order: ascending
+        trump_output: {$c: game_state, $p: trump_card}
+            
+    - type: mechanic
+      mechanic: trick
+      properties:
+        $trump_property: {$c: game_state, $p: trump_card}
+        $played_inventory: *played_cards
+        $tricks_taken_inventory: {$c: player_tricks_taken, $p: items}
+      
+            
+  
+  
+ 
+

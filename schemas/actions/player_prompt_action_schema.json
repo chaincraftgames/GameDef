@@ -1,0 +1,29 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "allOf": [
+    { "$ref": "/schemas/actions/base_action_schema.json" },
+    {
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["player_prompt"]
+        },
+        "properties": {
+          "type": "object",
+          "properties": {
+            "prompt": {
+              "type": "string",
+              "description": "The prompt message to display to the player"
+            },
+            "property_name": {
+              "type": "string",
+              "description": "The property name to store the player's response"
+            }
+          },
+          "required": ["prompt", "property_name"]
+        }
+      },
+      "required": ["type", "properties"]
+    }
+  ]
+}
