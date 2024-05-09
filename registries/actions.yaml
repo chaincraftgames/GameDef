@@ -1,0 +1,4 @@
+player_prompt:
+  schema: /schemas/actions/player_prompt_action_schema.json
+move_between_inventories:
+  schema: /schemas/actions/move_between_inventories_action_schema.json

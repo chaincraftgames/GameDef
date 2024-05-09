@@ -1,0 +1,12 @@
+action:
+  schema: /schemas/components/action_component_schema.json
+deck:
+  schema: /schemas/components/deck_component_schema.json
+inventory:
+  schema: /schemas/components/inventory_component_schema.json
+mechanic:
+  schema: /schemas/components/mechanic_component_schema.json
+proeprty_set:
+  schema: /schemas/components/property_set_component_schema.json
+scoring:
+  schema: /schemas/components/scoring_component_schema.json
