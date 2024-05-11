@@ -1,14 +1,12 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "game",
+    "description": "The game schema defines the structure of a game.",
     "type": "object",
     "properties": {
-        "roles": {
+        "components": {
             "type": "array",
-            "items": { "$ref": "/schemas/role_schema.json" }
-        },
-        "rounds": {
-            "type": "array",
-            "items": { "$ref": "/schemas/round_schema.json" }
+            "items": { "$ref": "/schemas/base_component_schema.json" }
         }
     }
 }

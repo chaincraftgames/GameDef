@@ -1,0 +1,86 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "definitions": {
+        "action_ref": {
+            "type": "string",
+            "description": "A reference to an action",
+            "properties": {
+                "$action_ref": {
+                    "type": "string",
+                    "description": "This string should match the id of an action"
+                }
+            },
+            "required": ["$action_ref"]
+        },
+        "deck_ref": {
+            "type": "string",
+            "description": "A reference to a deck",
+            "properties": {
+                "$deck_ref": {
+                    "type": "string",
+                    "description": "This string should match the id of a deck"
+                }
+            },
+            "required": ["$deck_ref"]
+        },
+        "inventory_ref": {
+            "type": "string",
+            "description": "A reference to an inventory",
+            "properties": {
+                "$inventory_ref": {
+                    "type": "string",
+                    "description": "This string should match the id of an inventory"
+                }
+            },
+            "required": ["$inventory_ref"]
+        },
+        "function_ref": {
+            "type": "string",
+            "description": "A reference to a function",
+            "properties": {
+                "$function_ref": {
+                    "type": "string",
+                    "description": "This string should match the id of a function"
+                }
+            },
+            "required": ["$function_ref"]
+        },
+        "player_role_ref": {
+            "type": "object",
+            "description": "A reference to a player role",
+            "properties": {
+                "$player_role_ref": {
+                    "type": "string",
+                    "description": "This string should match the id of a player_role"
+                }
+            },
+            "required": ["$player_role_ref"]
+        },
+        "component_ref": {
+            "type": "string",
+            "description": "A reference to a component",
+            "properties": {
+                "$component_ref": {
+                    "type": "string",
+                    "description": "This string should match the id of a component"
+                }
+            },
+            "required": ["$component_ref"]
+        },
+        "property_ref": {
+            "type": "object",
+            "description": "This object should reference a property in a component",
+            "properties": {
+                "$component_ref": {
+                    "type": "string",
+                    "description": "This string should match the id of a component"
+                },
+                "$property_ref": {
+                    "type": "string",
+                    "description": "This string should match the name of a property in the referenced component"
+                }
+            },
+            "required": ["$component_ref", "$property_ref"]
+        }
+    }
+}

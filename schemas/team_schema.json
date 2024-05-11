@@ -20,11 +20,11 @@
           "properties": {
             "$player_role": {
               "description": "The role that a player must have to be a member of this team.  This is the aggregation source",
-              "$ref": "/schemas/role_schema.json"
+              "$ref": "/schemas/references_schema.json#role_ref"
             },
             "$team_role": {
               "description": "The role that this team has.  The is the aggregation target.",
-              "$ref": "/schemas/role_schema.json"
+              "$ref": "/schemas/references_schema.json#role_ref"
             },
             "player_count": {
               "type": "object",
@@ -44,10 +44,10 @@
                 "type": "object",
                 "properties": {
                   "$input": {
-                    "$ref": "property_ref_schema.json#/definitions/property_ref"
+                    "$ref": "/schemas/references_schema.json#property_ref"
                   },
                   "$output": {
-                    "$ref": "property_ref_schema.json#/definitions/property_ref"
+                    "$ref": "/schemas/references_schema.json#property_ref"
                   }
                 },
                 "required": ["$input", "$output"]

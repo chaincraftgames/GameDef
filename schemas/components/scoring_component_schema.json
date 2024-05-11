@@ -17,16 +17,16 @@
               "description": "A map of input property references that are used to calculate the score.  These will be properties of the input object passed to the calculator function.  The keys are the names of the properties and the values are references to the properties in the input object.",
               "type": "object",
               "additionalProperties": {
-                "$ref": "/schemas/common_schema.json#/definitions/property_ref"
+                "$ref": "/schemas/references_schema.json#/definitions/property_ref"
               }
             },
             "$output_property": {
               "description": "A reference to the property in the output object that will contain the score.",
-              "$ref": "/schemas/common_schema.json#/definitions/property_ref"
+              "$ref": "/schemas/references_schema.json#/definitions/property_ref"
             },
             "calculator": {
               "description": "A reference to the function that will be used to calculate the score.",
-              "$ref": "/schemas/function_schema.json"
+              "$ref": "/schemas/references_schema.json#/definitions/function_ref"
             }
           },
           "required": ["$input_properties", "$output_property", "calculator"]

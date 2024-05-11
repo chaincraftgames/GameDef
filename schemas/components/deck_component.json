@@ -21,7 +21,7 @@
               "type": "string"
             },
             "deck": {
-              "$ref": "/schemas/deck_schema.json"
+              "$ref": "/schemas/references_schema.json#/definitions/deck_ref"
             }
           },
           "required": ["id", "deck"]

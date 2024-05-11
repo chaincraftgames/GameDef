@@ -7,17 +7,21 @@
       "properties": {
         "type": {
           "type": "string",
-          "enum": ["play_from_hand"]
+          "enum": ["move_between_inventories"]
         },
         "properties": {
           "type": "object",
           "properties": {
-            "to_property": {
-              "type": "string",
-              "description": "The pool that the action allows the player to add the card to.  If not specified then the card is played to the table."
+            "$to_inventory": {
+              "$ref": "/schemas/references_schema.json#/definitions/inventory_ref",
+              "description": "A refernce to the inventory to which items (e.g. cards) should be added."
+            },
+            "$from_inventory": {
+              "$ref": "/schemas/references_schema.json#/definitions/inventory_ref",
+              "description": "A reference to the inventory from which items (e.g. cards) should be taken."
             }
           },
-          "required": []
+          "required": ["to_property", "from_property"]
         }
       },
       "required": ["type", "properties"]

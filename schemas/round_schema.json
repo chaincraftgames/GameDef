@@ -5,7 +5,7 @@
     "type": "object",
     "properties": {
         "id": { "type": "string" },
-        "$player_role": { "$ref": "/schemas/common_schema.json#/definitions/player_role_ref" },
+        "$player_role": { "$ref": "/schemas/references_schema.json#/definitions/player_role_ref" },
         "components": {
             "type": "array",
             "items": { "$ref": "/schemas/component/base_component_schema.json" }

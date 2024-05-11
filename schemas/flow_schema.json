@@ -7,12 +7,6 @@
       "description": "End condition for the round",
       "oneOf": [
         {
-          "type": "string",
-          "enum": [
-            "each_player_once"
-          ]
-        },
-        {
           "type": "object",
           "properties": {
             "type": {
@@ -34,24 +28,23 @@
               "type": "string",
               "enum": ["custom"]
             },
-            "function_expression": {
-              "type": "string",
-              "description": "Custom function expression for the end condition"
+            "function": {
+              "$ref": "/schemas/references_schema.json#/definitions/function_ref"
             }
           },
-          "required": ["type", "function_expression"],
+          "required": ["type", "function"],
           "additionalProperties": false
         }
       ]
     },
-    "roundOrRepeat": {
+    "flowItem": {
       "oneOf": [
         {
           "description": "The inclusion of a round in the game flow",
           "type": "object",
           "properties": {
             "round": {
-              "type": "string"
+              "$ref": "/schemas/references_schema.json#/definitions/round_ref"
             },
             "end_condition": {
               "$ref": "#/definitions/endCondition"
@@ -66,11 +59,21 @@
             "repeat": {
               "type": "array",
               "items": {
-                "$ref": "#/definitions/roundOrRepeat"
+                "$ref": "#/definitions/flowItem"
               }
             }
           },
           "required": ["repeat"]
+        },
+        {
+          "description": "An action in the game flow",
+          "type": "object",
+          "properties": {
+            "action": {
+              "$ref": "/schemas/references_schema.json#/definitions/action_ref"
+            }
+          },
+          "required": ["action"]
         }
       ]
     }
@@ -87,7 +90,7 @@
     },
     {
       "items": {
-        "$ref": "#/definitions/roundOrRepeat"
+        "$ref": "#/definitions/flowItem"
       },
       "minItems": 1
     },
