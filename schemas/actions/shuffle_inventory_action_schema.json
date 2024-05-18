@@ -6,9 +6,9 @@
     { "$ref": "/schemas/actions/base_action_schema.json" },
     {
       "properties": {
-        "type": {
+        "action": {
           "type": "string",
-          "enum": ["shuffle_inventories"]
+          "enum": ["shuffle_inventory"]
         },
         "properties": {
           "type": "object",
@@ -18,10 +18,10 @@
               "description": "A refernce to the inventory to shuffle."
             }
           },
-          "required": ["to_property", "from_property"]
+          "required": ["$inventory"]
         }
       },
-      "required": ["type", "properties"]
+      "required": ["action", "properties"]
     }
   ]
 }

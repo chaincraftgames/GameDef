@@ -12,10 +12,49 @@
         },
         "properties": {
           "type": "object",
-          "additionalProperties": true
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "enum": ["string", "number", "boolean", "object"]
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "enum": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "required": ["enum"]
+                  }
+                ]
+              },
+              "default_value": {
+                "type": 
+                  [
+                    "string",
+                    "number",
+                    "boolean",
+                    "object",
+                    "null"
+                  ]
+              },
+              "required": {
+                "type": "boolean",
+                "default": false
+              }
+            }
+          }
         }
       },
       "required": ["type", "properties"]
     }
   ]
 }
+

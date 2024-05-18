@@ -17,14 +17,11 @@
         "properties": {
           "type": "object",
           "properties": {
-            "id": {
-              "type": "string"
-            },
-            "deck": {
+            "$deck": {
               "$ref": "/schemas/references_schema.json#/definitions/deck_ref"
             }
           },
-          "required": ["id", "deck"]
+          "required": ["$deck"]
         }
       },
       "required": ["type", "properties"]

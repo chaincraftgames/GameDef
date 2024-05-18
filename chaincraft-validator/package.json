@@ -7,7 +7,9 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "preprocess": "tsc  && node src/js/cli.js -p"
+    "preprocess": "tsc  && node src/js/cli.js -p",
+    "validate": "tsc  && node src/js/cli.js",
+    "validate-debug": "tsc  && node src/js/cli.js -f ../examples/spades/spades.yaml"
   },
   "dependencies": {
     "ajv": "^8.13.0",

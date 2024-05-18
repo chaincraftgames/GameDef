@@ -5,7 +5,7 @@
     { "$ref": "/schemas/actions/base_action_schema.json" },
     {
       "properties": {
-        "type": {
+        "action": {
           "type": "string",
           "enum": ["move_between_inventories"]
         },
@@ -21,10 +21,10 @@
               "description": "A reference to the inventory from which items (e.g. cards) should be taken."
             }
           },
-          "required": ["to_property", "from_property"]
+          "required": ["$to_inventory", "$from_inventory"]
         }
       },
-      "required": ["type", "properties"]
+      "required": ["action", "properties"]
     }
   ]
 }

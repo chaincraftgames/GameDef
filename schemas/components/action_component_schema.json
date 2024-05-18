@@ -13,9 +13,9 @@
         "properties": {
           "type": "object",
           "properties": {
-            "action": { "type": "string" }
+            "$action": { "$ref": "/schemas/references_schema.json#/definitions/action_ref" }
           },
-          "required": ["action"]
+          "required": ["$action"]
         }
       },
       "required": ["type", "properties"]

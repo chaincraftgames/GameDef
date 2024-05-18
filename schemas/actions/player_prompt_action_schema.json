@@ -4,7 +4,7 @@
     { "$ref": "/schemas/actions/base_action_schema.json" },
     {
       "properties": {
-        "type": {
+        "action": {
           "type": "string",
           "enum": ["player_prompt"]
         },
@@ -15,15 +15,14 @@
               "type": "string",
               "description": "The prompt message to display to the player"
             },
-            "property_name": {
-              "type": "string",
-              "description": "The property name to store the player's response"
+            "$property": {
+              "$ref": "/schemas/references_schema.json#/definitions/property_ref"
             }
           },
-          "required": ["prompt", "property_name"]
+          "required": ["prompt", "$property"]
         }
       },
-      "required": ["type", "properties"]
+      "required": ["action", "properties"]
     }
   ]
 }

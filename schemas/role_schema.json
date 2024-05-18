@@ -13,9 +13,11 @@
             "type": "integer",
             "description": "Maximum number of players with this role allowed to play the game."
         },
-        "components": {
+        "$components": {
             "type": "array",
-            "items": { "$ref": "/schemas/base_component_schema.json" }
+            "items": { "$ref": "/schemas/references_schema.json#/definitions/component_ref" }
         }
-    }
+    },
+    "additionalProperties": false,
+    "required": ["id"]
 }

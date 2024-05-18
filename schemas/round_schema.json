@@ -5,10 +5,15 @@
     "type": "object",
     "properties": {
         "id": { "type": "string" },
-        "$player_role": { "$ref": "/schemas/references_schema.json#/definitions/player_role_ref" },
-        "components": {
+        "$role": { "$ref": "/schemas/references_schema.json#/definitions/role_ref" },
+        "$actions": {
             "type": "array",
-            "items": { "$ref": "/schemas/component/base_component_schema.json" }
+            "items": { "$ref": "/schemas/references_schema.json#/definitions/action_ref" }
+        },
+        "$components": {
+            "type": "array",
+            "items": { "$ref": "/schemas/references_schema.json#/definitions/component_ref" }
         }
-    }
+    },
+    "additionalProperties": false
 }

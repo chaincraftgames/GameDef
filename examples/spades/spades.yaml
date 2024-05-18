@@ -2,7 +2,7 @@ includes:
   - ../examples/standard_deck.yaml
 
 functions:
-  calculate_score: 
+  - id: calculate_score
     parameters:
       bid: number
       tricks_taken: object
@@ -14,107 +14,143 @@ functions:
         return 10 * bid + (tricks_taken - bid)
       end
 
+components:
+# Player role components
+  - type: inventory
+    id: hand
+    properties:
+      max_size: 13
+      min_size: 0
+
+  - type: inventory
+    id: player_tricks_taken
+    properties:
+      max_size: 13
+      min_size: 0
+
+  - type: property_set
+    id: player_properties
+    properties:
+      bid:
+        type: number
+
+# Team role components
+  - type: property_set
+    id: team_properties
+    properties:
+      bid:
+        type: number
+      score:
+        type: number
+        default_value: 0
+
+  - type: inventory
+    id: team_tricks_taken
+    properties:
+      max_size: 13
+      min_size: 0
+
+# Round components
+  - type: scoring
+    id: scoring
+    properties:
+      input_properties:
+        - name: tricks_taken
+          $mapped_property: { $component_ref: team_tricks_taken, $r_property_ref: count }
+        - name: bid
+          $mapped_property: { $component_ref: team_properties, $property_ref: bid }
+      $output_property: { $component_ref: team_properties, $property_ref: score }
+      $calculator: { $function_ref: calculate_score }
+
+# Game components
+  - type: property_set
+    id: config
+    properties:
+      player_count: 
+        type: number
+        default_value: 4
+      score_limit: 
+        type: number
+        default_value: 100
+      fixed_rounds: 
+        type: number
+        default_value: 13
+
+  - type: property_set
+    id: game_state
+    properties:
+      trump_card: 
+        type: object
+        default_value: null
+
+  - type: inventory 
+    id: deal_inventory
+    properties:
+      max_size: 52
+      min_size: 0
+
+  - type: deck
+    id: deck
+    properties:
+      $deck: { $deck_ref: standard_deck}
+      $inventory: { $inventory_ref: deal_inventory }
+
+  - type: inventory 
+    id: played_cards
+    properties:
+      max_size: 4
+      min_size: 0
+
+  - type: team
+    id: team
+    properties:
+        $member_role: { $role_ref: player}
+        $team_role: { $role_ref: team} 
+        player_count:
+          min: 1
+          max: 2
+        aggregated_properties:
+          - $input: { $component_ref: player_properties, $property_ref: bid }
+            $output: { $component_ref: team_properties, $property_ref: bid }
+        aggregated_inventories:
+          - $input: { $inventory_ref: player_tricks_taken }
+            $output: { $inventory_ref: team_tricks_taken }
+
+  - type: mechanic
+    id: trump
+    mechanic: trump
+    properties:
+      $inventory: { $inventory_ref: played_cards }
+      trump_properties:
+        - $property: { $component_ref: card_properties, $property_ref: suit }
+          value: spade
+        - $property: { $component_ref: card_properties, $property_ref: rank }
+          order: ascending
+      $trump_output: { $component_ref: game_state, $property_ref: trump_card }
+          
+  - type: mechanic
+    id: trick
+    mechanic: trick
+    properties:
+      $trump_property: { $component_ref: game_state, $property_ref: trump_card }
+      $played_inventory: { $inventory_ref: played_cards }
+      $tricks_taken_inventory: { $inventory_ref: player_tricks_taken }
+
 roles:
   - id: player
     min: 2
     max: 4
-    components:
-      - type: inventory
-        id: hand
-        properties:
-          max_size: 13
-          min_size: 0
-
-      - type: inventory
-        id: player_tricks_taken
-        properties:
-          max_size: 13
-          min_size: 0
-
-      - type: property_set
-        id: player_properties
-        properties:
-          bid: 0
-          score: 0
-
+    $components:
+      - { $component_ref: hand }
+      - { $component_ref: player_tricks_taken }
+      - { $component_ref: player_properties }  
+      
   - id: team
     min: 2
     max: 2
-    components:
-      - type: property_set
-        id: team_properties
-        properties:
-          bid: 0
-          score: 0
-
-      - type: inventory
-        id: team_tricks_taken
-        properties:
-          max_size: 13
-          min_size: 0
-
-game:
-  components:
-    - type: property_set
-      id: config
-      properties:
-        player_count: 4
-        score_limit: 100
-        fixed_rounds: 10
-
-    - type: property_set
-      id: game_state
-      properties:
-        trump_card: null
-
-    - type: inventory 
-      id: deal_inventory
-      properties:
-        max_size: 52
-        min_size: 0
-
-    - type: deck
-      properties:
-        id: deck
-        $deck: { $deck_ref: standard_deck}
-        $inventory: { $inventory_ref: deal_inventory }
-
-    - type: inventory 
-      id: played_cards
-      properties:
-        max_size: 4
-        min_size: 0
-
-    - type: team
-      properties:
-          $player_role: { $role_ref: player}
-          $team_role: { $role_ref: team} 
-          player_count:
-            min: 1
-            max: 2
-          aggregator:
-            - $input: { $component_ref: player_properties, $property_ref: bid }
-              $output: { $component_ref: team_properties, $property_ref: bid }
-            - $input: { $component_ref: player_tricks_taken, $property_ref: items }
-              $output: { $component_ref: team_tricks_taken, $property_ref: items }
-
-    - type: mechanic
-      mechanic: trump
-      properties:
-        $inventory: { $inventory_ref: played_cards }
-        trump_properties:
-          - $property: { $component_ref: card, $property_ref: suit }
-            value: spade
-          - $property: { $component_ref: card, $property_ref: rank }
-            order: ascending
-        trump_output: { $component_ref: game_state, $property_ref: trump_card }
-            
-    - type: mechanic
-      mechanic: trick
-      properties:
-        $trump_property: { $component_ref: game_state, $property_ref: trump_card }
-        $played_inventory: { $inventory_ref: played_cards }
-        $tricks_taken_inventory: { $component_ref: player_tricks_taken, $property_ref: items }
+    $components:
+      - { $component_ref: team_properties }
+      - { $component_ref: team_tricks_taken }
 
 actions:
   - id: bid_on_tricks
@@ -150,71 +186,64 @@ actions:
 
 rounds:
   - id: prepare_for_deal
-    $player_role:  { $role_ref: team }
-    components:
-      - type: action
-        properties:
-          action: { $action_ref: reset_deck }
+    $role:  { $role_ref: team }
+    $actions: 
+      - { $action_ref: reset_deck }
           
   - id: deal_round
-    $player_role:  { $role_ref: player }
-    components:
-      - type: action
-        properties:
-          action: { $action_ref: deal }
+    $role:  { $role_ref: player }
+    $actions: 
+      - { $action_ref: deal }
 
   - id: bidding_round
-    $player_role: { $role_ref: player }
-    components:
-      - type: action
-        properties:
-          action: { $action_ref: bid_on_tricks }
+    $role: { $role_ref: player }
+    $actions: 
+      - { $action_ref: bid_on_tricks }
 
-  - id: outer_round
-    $player_role: { $role_ref: player }
-    components:
-      - type: scoring
-        properties:
-          $input_properties:
-            $tricks_taken: { $component_ref: player_tricks_taken, $property_ref: items }
-            $bid: { $component_ref: player_properties, $property_ref: bid }
-          $output_property: { $component_ref: player_properties, $property_ref: score }
-          $calculator: { $function_ref: calculate_score }
+  - id: scoring_round
+    $role: { $role_ref: player }
+    $components:
+      - { $component_ref: scoring }
       
-  - id: inner_round
-    $player_role: { $role_ref: player }
-    components:
-      - type: action
-        properties:
-          action: { $action_ref: play_card }
+  - id: tricks_round
+    $role: { $role_ref: player }
+    $actions: 
+      - { $action_ref: play_card }
 
+game:
+  $components:
+    - { $component_ref: config }
+    - { $component_ref: game_state }
+    - { $component_ref: deck }
+    - { $component_ref: played_cards }
+    - { $component_ref: team }
+    - { $component_ref: deal_inventory }
+    - { $component_ref: trump }
+    - { $component_ref: trick }
+   
 flow:
-  - start
   - repeat:
-    - round: { $round_ref: prepare_for_deal }
+    - repeat:
+      - $round: { $round_ref: prepare_for_deal }
       end_condition: 
         rounds_played: 1
-    - action: { $action_ref: shuffle_deck }
-    - round: { $round_ref: deal_round }
+    - $action: { $action_ref: shuffle_deck }
+    - repeat:
+      - $round: { $round_ref: deal_round }
       end_condition: 
         rounds_played: 13
-    - round: { $round_ref: bidding_round }
-      end_condition: each_player_once
-    - round: { $round_ref: outer_round }
-      repeat:
-        - round: { $round_ref: inner_round }
-          end_condition: 
-            rounds_played: 1
+    - $round: { $round_ref: bidding_round }
+    - repeat:
+      - $round: { $round_ref: tricks_round }
       end_condition: 
         rounds_played: 13
-  - end_condition:
-      or:
-        $score_limit: { $component_ref: config, $property_ref: score_limit }
-        $rounds_played: { $component_ref: config, $property_ref: fixed_rounds }
-  - end
- 
+    - $round: { $round_ref: scoring_round }
+    end_condition:
+      require_all: false
+      $score_limit: { $component_ref: config, $property_ref: score_limit }
+      $rounds_played: { $component_ref: config, $property_ref: fixed_rounds } 
       
-            
+
   
   
  

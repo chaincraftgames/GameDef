@@ -1,8 +1,9 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "/schemas/references_schema.json",
     "definitions": {
         "action_ref": {
-            "type": "string",
+            "type": "object",
             "description": "A reference to an action",
             "properties": {
                 "$action_ref": {
@@ -10,10 +11,11 @@
                     "description": "This string should match the id of an action"
                 }
             },
-            "required": ["$action_ref"]
+            "required": ["$action_ref"],
+            "additionalProperties": false
         },
         "deck_ref": {
-            "type": "string",
+            "type": "object",
             "description": "A reference to a deck",
             "properties": {
                 "$deck_ref": {
@@ -21,10 +23,11 @@
                     "description": "This string should match the id of a deck"
                 }
             },
-            "required": ["$deck_ref"]
+            "required": ["$deck_ref"],
+            "additionalProperties": false
         },
         "inventory_ref": {
-            "type": "string",
+            "type": "object",
             "description": "A reference to an inventory",
             "properties": {
                 "$inventory_ref": {
@@ -32,10 +35,11 @@
                     "description": "This string should match the id of an inventory"
                 }
             },
-            "required": ["$inventory_ref"]
+            "required": ["$inventory_ref"],
+            "additionalProperties": false
         },
         "function_ref": {
-            "type": "string",
+            "type": "object",
             "description": "A reference to a function",
             "properties": {
                 "$function_ref": {
@@ -43,21 +47,35 @@
                     "description": "This string should match the id of a function"
                 }
             },
-            "required": ["$function_ref"]
+            "required": ["$function_ref"],
+            "additionalProperties": false
         },
-        "player_role_ref": {
+        "role_ref": {
             "type": "object",
             "description": "A reference to a player role",
             "properties": {
-                "$player_role_ref": {
+                "$role_ref": {
                     "type": "string",
-                    "description": "This string should match the id of a player_role"
+                    "description": "This string should match the id of a player role"
                 }
             },
-            "required": ["$player_role_ref"]
+            "required": ["$role_ref"],
+            "additionalProperties": false
+        },
+        "round_ref": {
+            "type": "object",
+            "description": "A reference to a round",
+            "properties": {
+                "$round_ref": {
+                    "type": "string",
+                    "description": "This string should match the id of a round"
+                }
+            },
+            "required": ["$round_ref"],
+            "additionalProperties": false
         },
         "component_ref": {
-            "type": "string",
+            "type": "object",
             "description": "A reference to a component",
             "properties": {
                 "$component_ref": {
@@ -65,9 +83,10 @@
                     "description": "This string should match the id of a component"
                 }
             },
-            "required": ["$component_ref"]
+            "required": ["$component_ref"],
+            "additionalProperties": false
         },
-        "property_ref": {
+        "design_property_ref": {
             "type": "object",
             "description": "This object should reference a property in a component",
             "properties": {
@@ -80,7 +99,34 @@
                     "description": "This string should match the name of a property in the referenced component"
                 }
             },
-            "required": ["$component_ref", "$property_ref"]
+            "required": ["$component_ref", "$property_ref"],
+            "additionalProperties": false
+        },
+        "runtime_property_ref": {
+            "type": "object",
+            "description": "This object should reference a runtime property in a component",
+            "properties": {
+                "$component_ref": {
+                    "type": "string",
+                    "description": "This string should match the id of a component"
+                },
+                "$r_property_ref": {
+                    "type": "string",
+                    "description": "This string should match the name of a runtime property in the referenced component"
+                }
+            },
+            "required": ["$component_ref", "$r_property_ref"],
+            "additionalProperties": false
+        },
+        "property_ref": {
+            "oneOf": [
+                {
+                    "$ref": "#/definitions/design_property_ref"
+                },
+                {
+                    "$ref": "#/definitions/runtime_property_ref"
+                }
+            ]
         }
     }
 }

@@ -3,90 +3,36 @@
   "$id": "card_deck_schema.json",
   "title": "deck",
   "description": "The definition of a deck of cards.  A deck is a collection of cards of similar type and function.  Some games may have multiple decks.  The card defines the properties or stats for cards of that type whereas the deck defines specific instances of that card in a game",
-  "definitions": {
-    "card": {
-      "description": "The definition of a type of card in a deck.  These will be instanced in the deck object",  
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string"
-        },
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "$components": {
+      "type": "array",
+      "items": { "$ref": "/schemas/references_schema.json#/definitions/component_ref" }
+    },
+    "cards": {
+      "type": "array",
+      "items": {
+        "type": "object",
         "properties": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "properties": {
-              "name": {
-                "type": "string"
-              },
-              "type": {
-                "anyOf": [
-                  {
-                    "type": "string",
-                    "enum": ["enum", "string", "number", "boolean"]
-                  },
-                  {
-                    "type": "object",
-                    "properties": {
-                      "enum": {
-                        "type": "array",
-                        "items": {
-                          "type": "string"
-                        }
-                      }
-                    },
-                    "required": ["enum"]
-                  }
-                ]
-              },
-              "required": {
-                "type": "boolean"
-              }
-            },
-            "required": ["name", "type"]
-          }
-        },
-        "back": {
-          "type": "object",
+          "id": {
+            "type": "string"
+          },
           "properties": {
-            "image": {
+            "type": "object",
+            "additionalProperties": {
               "type": "string"
             }
           },
-          "required": ["image"]
-        }
-      },
-      "required": ["id", "properties", "back"]
-    },
-    "deck": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string"
-        },
-        "cards": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "properties": {
-              "id": {
-                "type": "string"
-              },
-              "properties": {
-                "type": "object",
-                "additionalProperties": {
-                  "type": "string"
-                }
-              },
-              "image": {
-                "type": "string"
-              }
-            },
-            "required": ["id", "properties", "image"]
+          "image": {
+            "type": "string"
           }
-        }
-      },
-      "required": ["id", "cards"]
+        },
+        "required": ["id", "properties", "image"]
+      }
     }
-  }
+  },
+  "required": ["id", "cards"]
 }

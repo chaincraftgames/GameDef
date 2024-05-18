@@ -45,11 +45,20 @@ The game can have components that grant properties, inventories, assets (such as
 ### Mechanics
 Mechanics are elements of gameplay that are game independent and are resusable across games.  For example, the idea of having a trump card, exists in games spades, hearts and euchre, and could be applicable to deck builders as well.  ChainCraft has a set of core mechanics Mechanics have a lua script. They also have a schema that defines which the interface to the mechanic (what it's inputs are). Mechanic scripts will never be specified in the yaml for a specific game as they are game independent, however the mechanic properties will be specific to the game's usage of the mechanic.  Eventually, there will be a mechanics registry where creators can register mechnics that can be incorporated in games.  This will provide utility for nvel gameplay concepts even if the game they were originally introduced in is never made.   
 
-### Components
+### Components 
+These are passive attributes that define the state and properties of an entity. They affect gameplay broadly and are always "active" as long as they are attached to an entity. They may not have a direct graphical representation, but they define the underlying data and rules of the game.  Components may be standard components of may be introduced as part of a mechanic.
+
 Components are defined in the `components.yaml` file in the `registries` directory. Each component has a corresponding JSON schema file in the `schemas` directory.  
 
-## Actions
+
+### Actions
+These are active behaviors that require input or decision from the user (or AI for non-player entities). They have a direct impact on the game state and often have a graphical representation (like an animation). They can be enabled or disabled, providing a dynamic aspect to the gameplay.  Actions may be standard actions or may be introduced as part of a mechanic.
+
 Actions are defined in the `actions.yaml` file in the `registries` directory. Each action has a corresponding JSON schema file in the `schemas` directory.
+
+
+## Actions
+
 
 ## Contributing
 Contributions are welcome! Please read the contributing guidelines before making any changes.

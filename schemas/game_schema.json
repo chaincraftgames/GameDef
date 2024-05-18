@@ -4,9 +4,10 @@
     "description": "The game schema defines the structure of a game.",
     "type": "object",
     "properties": {
-        "components": {
+        "$components": {
             "type": "array",
-            "items": { "$ref": "/schemas/base_component_schema.json" }
+            "items": { "$ref": "/schemas/references_schema.json#/definitions/component_ref" }
         }
-    }
+    },
+    "additionalProperties": false
 }

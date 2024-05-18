@@ -18,7 +18,7 @@
         "properties": {
           "type": "object",
           "properties": {
-            "$player_role": {
+            "$role": {
               "description": "The role that a player must have to be a member of this team.  This is the aggregation source",
               "$ref": "/schemas/references_schema.json#role_ref"
             },
@@ -54,7 +54,7 @@
               }
             }
           },
-          "required": ["$player_role", "$team_role", "player_count", "aggregator"]
+          "required": ["$role", "$team_role", "player_count", "aggregator"]
         }
       },
       "required": ["type", "properties"]

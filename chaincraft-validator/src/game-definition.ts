@@ -5,4 +5,5 @@ export interface GameDefinition {
   roles?: Record<string, unknown>;
   rounds?: Record<string, unknown>;
   game?: Record<string, unknown>;
+  actions?: Record<string, unknown>;
 }

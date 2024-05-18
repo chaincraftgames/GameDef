@@ -10,7 +10,7 @@ import { dirname } from 'path';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-export const fetchData = async (input: string): Promise<string> => {
+export const fetchData = async (input: string, mustBeUrlOrFilePath = false): Promise<string> => {
     // Check if input is a URL
     if (input.startsWith('http://') || input.startsWith('https://')) {
         // const response = await fetch(input);
@@ -33,6 +33,10 @@ export const fetchData = async (input: string): Promise<string> => {
     }
     // Assume input is a string
     else {
-        return input;
+        if (mustBeUrlOrFilePath) {
+            throw new Error(`Failed to load data from ${input}.  Input must be a URL or file path.`);
+        } else {
+            return input;
+        }
     }
 }

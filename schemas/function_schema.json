@@ -4,6 +4,9 @@
   "description": "A defintiion of a function used in gameplay",
   "type": "object",
   "properties": {
+    "id": {
+      "type": "string"
+    },
     "parameters": {
       "type": "object",
       "additionalProperties": {
@@ -19,5 +22,5 @@
       "type": "string"
     }
   },
-  "required": ["parameters", "return", "code"]
+  "required": ["id", "parameters", "return", "code"]
 }
