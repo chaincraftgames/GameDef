@@ -25,11 +25,12 @@ export const fetchData = async (input: string, mustBeUrlOrFilePath = false): Pro
     } 
     // Check if input is a file path
     else if (fs.existsSync(input)) {
-        return fs.readFileSync(input, 'utf8');
+        const data = await fs.promises.readFile(input, 'utf8');
+        return data;
     } 
     // Check if input is a file path relative to the current file
     else if (fs.existsSync(path.resolve(__dirname, input))) {
-        return fs.readFileSync(path.resolve(__dirname, input), 'utf8');
+        return await fs.promises.readFile(path.resolve(__dirname, input), 'utf8');
     }
     // Assume input is a string
     else {

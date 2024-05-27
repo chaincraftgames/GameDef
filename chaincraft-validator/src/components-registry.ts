@@ -7,35 +7,37 @@ type PropertyDef = {
     default: any;
 };
 
+type ComponentsRegistryEntry = {
+    schema: string;
+    "runtime_properties": [PropertyDef];
+};
+
 type ComponentsRegistry = {
-    [componentName: string]: {
-        schema: string;
-        "runtime_properties": [PropertyDef];
-    };
+    [componentName: string]: ComponentsRegistryEntry;
 };
 
 const _componentsRegistryFile = "../registries/components.yaml";
 
-let _componentsRegistry: ComponentsRegistry | undefined;
+let _componentsRegistry: Promise<ComponentsRegistry> | undefined;
 
 export const componentSchema = async (componentName: string): Promise<string> => {
-    if (!_componentsRegistry) {
-        _componentsRegistry = await _loadComponentsRegistry();
-    }
-    if (!_componentsRegistry[componentName]) {
-        throw new Error(`Component schema not found for ${componentName}`);
-    }
-    return _componentsRegistry[componentName].schema;
+    
+    return (await getComponentsRegistryEntry(componentName)).schema;
 }
 
 export const componentRuntimeProperties = async (componentName: string): Promise<[PropertyDef]> => {
+    return (await getComponentsRegistryEntry(componentName))["runtime_properties"] ?? [];
+}
+
+const getComponentsRegistryEntry = async (componentName: string): Promise<ComponentsRegistryEntry> => {
     if (!_componentsRegistry) {
-        _componentsRegistry = await _loadComponentsRegistry();
+        _componentsRegistry = _loadComponentsRegistry();
     }
-    if (!_componentsRegistry[componentName]) {
-        throw new Error(`Component not found for ${componentName}`);
+    const componentsRegistry = await _componentsRegistry;
+    if (!componentsRegistry[componentName]) {
+        throw new Error(`Component schema not found for ${componentName}`);
     }
-    return _componentsRegistry[componentName]["runtime_properties"] ?? [];
+    return componentsRegistry[componentName];
 }
 
 const _loadComponentsRegistry = async (): Promise<ComponentsRegistry> => {

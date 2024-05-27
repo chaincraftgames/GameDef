@@ -9,8 +9,9 @@ const coreSchemaFiles = {
     "function": "../schemas/function_schema.json",
     "game": "../schemas/game_schema.json",
     "role": "../schemas/role_schema.json",
-    "round": "../schemas/round_schema.json",
-    "flow": "../schemas/flow_schema.json",
+    "state": "../schemas/state_schema.json",
+    "deck": "../schemas/deck_schema.json",
+    "board": "../schemas/board_schema.json",
 };
 
 const referencesSchemaId = "/schemas/references_schema.json";
@@ -28,14 +29,15 @@ const ajv = new Ajv({
     verbose: true,
 });
 
-let _functionSchema: ValidateFunction | undefined;
-let _gameSchema: ValidateFunction | undefined;
-let _roleSchema: ValidateFunction | undefined;
-let _roundSchema: ValidateFunction | undefined;
-let _flowSchema: ValidateFunction | undefined;
+let _functionSchema: Promise<ValidateFunction> | undefined;
+let _gameSchema: Promise<ValidateFunction> | undefined;
+let _roleSchema: Promise<ValidateFunction> | undefined;
+let _stateSchema: Promise<ValidateFunction> | undefined;
+let _deckSchema: Promise<ValidateFunction> | undefined;
+let _boardSchema: Promise<ValidateFunction> | undefined;
 
-let _actionSchemas: { [actionName: string]: ValidateFunction } = {};
-let _componentSchemas: { [componentName: string]: ValidateFunction } = {};
+let _actionSchemas: { [actionName: string]: Promise<ValidateFunction> } = {};
+let _componentSchemas: { [componentName: string]: Promise<ValidateFunction> } = {};
 
 const _loadSchema = async (path: string): Promise<ValidateFunction> => {
     let schema;
@@ -54,42 +56,49 @@ const _loadSchema = async (path: string): Promise<ValidateFunction> => {
 
 export const functionSchema = async (): Promise<ValidateFunction> => {
     if (!_functionSchema) {
-        _functionSchema = await _loadSchema(coreSchemaFiles.function);
+        _functionSchema = _loadSchema(coreSchemaFiles.function);
     }
     return _functionSchema;
 }
 
 export const gameSchema = async (): Promise<ValidateFunction> => {
     if (!_gameSchema) {
-        _gameSchema = await _loadSchema(coreSchemaFiles.game);
+        _gameSchema = _loadSchema(coreSchemaFiles.game);
     }
     return _gameSchema;
 }
 
 export const roleSchema = async (): Promise<ValidateFunction> => {
     if (!_roleSchema) {
-        _roleSchema = await _loadSchema(coreSchemaFiles.role);
+        _roleSchema = _loadSchema(coreSchemaFiles.role);
     }
     return _roleSchema;
 }
 
-export const roundSchema = async (): Promise<ValidateFunction> => {
-    if (!_roundSchema) {
-        _roundSchema = await _loadSchema(coreSchemaFiles.round);
+export const stateSchema = async (): Promise<ValidateFunction> => {
+    if (!_stateSchema) {
+        _stateSchema = _loadSchema(coreSchemaFiles.state);
     }
-    return _roundSchema;
+    return _stateSchema;
 }
 
-export const flowSchema = async (): Promise<ValidateFunction> => {
-    if (!_flowSchema) {
-        _flowSchema = await _loadSchema(coreSchemaFiles.flow);
+export const deckSchema = async (): Promise<ValidateFunction> => {
+    if (!_deckSchema) {
+        _deckSchema = _loadSchema(coreSchemaFiles.deck);
     }
-    return _flowSchema;
+    return _deckSchema;
+}
+
+export const boardSchema = async (): Promise<ValidateFunction> => {
+    if (!_boardSchema) {
+        _boardSchema = _loadSchema(coreSchemaFiles.board);
+    }
+    return _boardSchema;
 }
 
 export const actionSchema = async (actionName: string): Promise<ValidateFunction> => {
     if (!_actionSchemas[actionName]) {
-        const schema = await actionSchemaLocation(actionName).then(_loadSchema);
+        const schema = actionSchemaLocation(actionName).then(_loadSchema);
         _actionSchemas[actionName] = schema;
     }
     return _actionSchemas[actionName];
@@ -97,7 +106,7 @@ export const actionSchema = async (actionName: string): Promise<ValidateFunction
 
 export const componentSchema = async (componentName: string): Promise<ValidateFunction> => {
     if (!_componentSchemas[componentName]) {
-        const schema = await componentSchemaLocation(componentName).then(_loadSchema);
+        const schema = componentSchemaLocation(componentName).then(_loadSchema);
         _componentSchemas[componentName] = schema;
     }
     return _componentSchemas[componentName];

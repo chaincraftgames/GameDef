@@ -4,8 +4,7 @@ import type { ErrorObject, ValidateFunction } from 'ajv';
 import type { GameDefinition } from './game-definition.js';
 
 import {  
-    actionSchema, componentSchema, functionSchema, roleSchema, roundSchema, 
-    flowSchema, gameSchema
+    actionSchema, componentSchema, functionSchema, roleSchema, gameSchema
 } from './schemas.js'
 
 import { Validator } from './validator.js';
@@ -33,12 +32,10 @@ export class SchemaValidator implements Validator {
             const areComponentsValid = await this._validateComponents();
             const areFunctionsValid = await this._validateFunctions();
             const areRolesValid = await this._validateRoles();
-            const areRoundsValid = await this._validateRounds();
-            const isFlowValid = await this._validateFlow();
             const areActionsValid = await this._validateActions();
             const isGameValid = await this._validateGame();
             return areComponentsValid && areFunctionsValid && areRolesValid && 
-                   areRoundsValid && isFlowValid && areActionsValid && 
+                   areActionsValid && 
                    isGameValid;
         } catch (error) {
             this._errors.push({
@@ -84,49 +81,10 @@ export class SchemaValidator implements Validator {
         return true;
     }
 
-    async _validateRounds() {
-        if (this._gameDefinition && Array.isArray(this._gameDefinition.rounds)) {
-            const roundSchemaValidator: ValidateFunction = await roundSchema();
-            const validations = this._gameDefinition.rounds.map(async (round, index) => {
-                let roundIsValid = roundSchemaValidator(round);
-                if (!roundIsValid && roundSchemaValidator.errors) {
-                    this._pushErrors('rounds', round, index, roundSchemaValidator.errors);
-                }
-                return roundIsValid;
-            });
-    
-            const results = await Promise.all(validations);
-            return results.every(result => result);
-        }
-        return true;
-    }
-
-    async _validateFlow() {
-        if (this._gameDefinition && this._gameDefinition.flow) {
-            const flowSchemaValidator: ValidateFunction = await flowSchema();
-            const flowIsValid = flowSchemaValidator(this._gameDefinition.flow);
-            if (!flowIsValid && flowSchemaValidator.errors) {
-                this._pushErrors('flow', this._gameDefinition.flow, 0, flowSchemaValidator.errors);
-                return false;
-            } 
-        } else {
-            const errorMessage = 'Error validating game definition: A single flow is required.';
-            this._errors.push({
-                message: errorMessage,
-                keyword: '',
-                instancePath: '',
-                schemaPath: '',
-                params: {}
-            }); 
-            return false;
-        }
-        return true;
-    }
-
     async _validateActions() {
         if (this._gameDefinition && Array.isArray(this._gameDefinition.actions)) {
             const validations = this._gameDefinition.actions.map(async (action, index) => {
-                const actionSchemaValidator: ValidateFunction = await actionSchema(action.action);
+                const actionSchemaValidator: ValidateFunction = await actionSchema((action as any).action);
                 const actionIsValid = actionSchemaValidator(action);
                 if (!actionIsValid && actionSchemaValidator.errors) {
                     this._pushErrors('actions', action, index, actionSchemaValidator.errors);

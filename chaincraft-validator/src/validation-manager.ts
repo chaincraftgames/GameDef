@@ -2,21 +2,23 @@
 import { Validator } from './validator.js';
 import { ReferencesValidator } from './references-validator.js';
 import { SchemaValidator } from './schema-validator.js';
+import { RulesetValidator } from './ruleset-validator.js';
 import { preprocess } from './preprocessor.js';
 import { GameDefinition } from './game-definition.js';
-import type { ErrorObject } from 'ajv';
 
 interface ValidationOptions {
     validateReferences: boolean;
+    validationRuleset: any;
 }
 
 export class ValidationManager {
     private validators: Validator[] = [];
     private _gameDefinition: GameDefinition | null = null;
-    private _errors: ErrorObject[] = [];
+    private _errors: any[] = [];
 
     constructor(private path: string, private options: ValidationOptions = {
-        validateReferences: true,
+        validateReferences: false,
+        validationRuleset: {}
     }) {
     }
 
@@ -24,8 +26,15 @@ export class ValidationManager {
         return this._gameDefinition;
     }
 
-    get errors(): ErrorObject[] {
-        return this.validators.flatMap(validator => validator.errors);
+    get errors(): any[] {
+        return this.validators.flatMap(validator => {
+            return validator.errors.map(error => {
+                return {
+                    validator: validator.constructor.name,
+                    ...error
+                };
+            });
+        });
     }
 
     async validate(): Promise<boolean> {
@@ -45,11 +54,17 @@ export class ValidationManager {
                 this.validators.push(new ReferencesValidator(this._gameDefinition));
             }
 
-            const validatePromises = this.validators.map(validator => validator.validate());
+            if (this.options.validationRuleset) {
+                this.validators.push(new RulesetValidator(this._gameDefinition, this.options.validationRuleset));
+            }
+
+            const validatePromises = this.validators.map(this._validateUsingValidator.bind(this));
             const results = await Promise.all(validatePromises);
             return results.every(promise => promise);
         } catch (error) {
-            console.error("Error validating game definition: ", error);
+            this._errors.push({
+                message: `Error validating game definition: ${error}`,
+            });
             return false;
         }
     }
@@ -60,11 +75,23 @@ export class ValidationManager {
         } catch (e) {
             this._errors.push({
                 message: `Error processing game definition: ${e}`,
-                keyword: '',
-                instancePath: '',
-                schemaPath: '',
-                params: {}
             });
         }
+    }
+
+    async _validateUsingValidator(validator: Validator) {
+        const validatorName = validator.constructor.name;
+        console.log(`Validating gamedef using ${validatorName}`)
+        try {
+            await validator.validate();
+            return validator.errors.length === 0;
+        } catch (error) {
+            this._errors.push({
+                validator: validatorName,
+                message: `Error validating game definition: ${error}`,
+            });
+            return false;
+        }
+        
     }
 }

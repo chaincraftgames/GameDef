@@ -9,9 +9,11 @@
     "preview": "vite preview",
     "preprocess": "tsc  && node src/js/cli.js -p",
     "validate": "tsc  && node src/js/cli.js",
-    "validate-debug": "tsc  && node src/js/cli.js -f ../examples/spades/spades.yaml"
+    "validate-debug": "tsc  && node src/js/cli.js -r -f ../examples/memory/memory.yaml"
   },
   "dependencies": {
+    "@stoplight/spectral-core": "^1.18.3",
+    "@stoplight/spectral-functions": "^1.7.2",
     "ajv": "^8.13.0",
     "axios": "^1.6.8",
     "js-yaml": "^4.1.0",

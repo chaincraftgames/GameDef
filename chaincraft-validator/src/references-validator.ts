@@ -55,7 +55,7 @@ export class ReferencesValidator implements Validator {
                 // which we do to make sure the brain dead AI doesn't do something stupid.
 
                 // Find all components with a type that matches the type of the reference
-                const components = (this._gameDefinition.components as any[]).filter(
+                const components = (this._gameDefinition.components as Record<string, unknown>[]).filter(
                     (component: any) => component.id && component.type === type
                 );
                 components.forEach((component: any) => {
