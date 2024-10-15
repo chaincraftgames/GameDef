@@ -1,9 +1,12 @@
-# ChainCraft Game Definition
+# ChainCraft Game DSL: Decentralized Game Definitions with Web3 Integration
 This repo contains the schemas, examples, and validator for ChainCraft Game Definitions.
 
-ChainCraft Game Defintiions provide a domain specific language for games from which we can generate code for playable games.  The intent is that the creation of a game definition is a result of the collaboration between ChainCraft AI agents and human creators.  By giving the AI a target which is a DSL, we can reduce or eliminate qulaity issues that occur when asking an AI to generate all the code for a game.  Additionally, we can allow the AI to create a platform independent defintiion of a game, which we can then translate to platform dependent code on any platform.  This is a key element in the open architecture of ChainCraft where we are intentionally avoiding creating walled gardens that are an apsect of many low-code and no-code game creation platforms.
+ChainCraft Game Definitions provide a domain-specific language (DSL) for games, from which we can generate code for playable games. The intent is that the creation of a game definition is a collaborative process between ChainCraft AI agents and human creators. By giving the AI a target DSL, we can reduce or eliminate quality issues that occur when asking an AI to generate all the code for a game. Additionally, this allows the AI to create platform-independent definitions, which can be translated into platform-specific code on any platform. This approach forms a key part of the open architecture of ChainCraft, intentionally avoiding the creation of walled gardens common in many low-code and no-code game creation platforms.
 
-The ChainCraft Game Definition is design to evolve over time to broaden the types of games that can be generated with ChainCraft.  Initially, ChainCraft is focussed on card games.  Later it will expand to incorporate tabletop games and eventually video games.
+ChainCraft's integration with Web3 technology allows for decentralized ownership and distribution of game assets and definitions. By leveraging smart contracts and NFTs, creators and contributors can maintain provenance and rights over their work, ensuring a more equitable and transparent ecosystem. This Web3-native approach also enables seamless integration with blockchain elements like on-chain game assets, making it possible to build interoperable and community-driven game experiences.
+
+The ChainCraft Game Definition is designed to evolve over time to broaden the types of games that can be generated with ChainCraft. Initially, ChainCraft is focused on card games, and later it will expand to incorporate tabletop games and eventually video games.
+
 
 ## Structure
 
